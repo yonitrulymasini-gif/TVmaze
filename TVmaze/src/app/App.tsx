@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getShows } from '../features/catalog/service';
 import type { TvmazeShow } from '../features/catalog/service';
+import { ShowGrid } from '../features/catalog/components/ShowGrid';
 import '../App.css';
 
 function App() {
@@ -28,18 +29,14 @@ function App() {
 
       <section className="home-hero">
         <h1>Explorez l’univers des séries.</h1>
-        <p className="intro-copy">Le site est en construction, étape par étape.</p>
+        <p className="intro-copy">Découvrez des séries, retrouvez leurs épisodes et gardez vos préférées à portée de main.</p>
       </section>
 
       <section className="catalog">
         <h2>Toutes les séries ({shows.length})</h2>
         {loading && <p className="notice">Chargement du catalogue…</p>}
         {error && <p className="notice error-notice" role="alert">{error}</p>}
-        <ul>
-          {shows.map((show) => (
-            <li key={show.id}>{show.name}</li>
-          ))}
-        </ul>
+        <ShowGrid shows={shows} />
       </section>
 
       <footer className="footer">
