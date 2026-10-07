@@ -39,7 +39,7 @@ export function ShowDetailsModal({ show, loading, error, isInMyList, onToggleMyL
       >
         <button className="modal-close" onClick={onClose} aria-label="Fermer">×</button>
         <div className="detail-header">
-          {show.image?.original && <img className="detail-poster" src={show.image.original} alt="" />}
+          {show.image?.medium && <img className="detail-poster" src={show.image.medium} alt="" />}
           <div className="detail-copy">
             <p className="eyebrow">FICHE SÉRIE</p>
             <h2 id="detail-title">{show.name}</h2>
@@ -59,9 +59,9 @@ export function ShowDetailsModal({ show, loading, error, isInMyList, onToggleMyL
               <span aria-hidden="true">{isInMyList ? '♥' : '♡'}</span>
               {isInMyList ? 'Dans ma liste' : 'Ajouter à ma liste'}
             </button>
-            {plainText(show.summary) && <p className="summary">{plainText(show.summary)}</p>}
           </div>
         </div>
+        {plainText(show.summary) && <p className="summary">{plainText(show.summary)}</p>}
 
         <div className="episodes-section">
           <h3>Épisodes</h3>
