@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getShows, searchShows } from '../features/catalog/service';
+import { getShow, getShows, searchShows } from '../features/catalog/service';
 import type { TvmazeShow } from '../features/catalog/service';
+import { ShowDetailsModal } from '../features/catalog/components/ShowDetailsModal';
 import { ShowGrid } from '../features/catalog/components/ShowGrid';
 import '../App.css';
 
@@ -11,6 +12,9 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
+  const [selectedShow, setSelectedShow] = useState<TvmazeShow | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState('');
 
   const isSearchMode = query.trim().length >= 2;
   const visibleShows = isSearchMode ? searchResults : shows;
@@ -57,6 +61,19 @@ function App() {
     if (value.trim().length < 2) setSearchResults([]);
   }
 
+  async function openShow(show: TvmazeShow) {
+    setSelectedShow(show);
+    setDetailLoading(true);
+    setDetailError('');
+    try {
+      setSelectedShow(await getShow(show.id));
+    } catch (cause) {
+      setDetailError(cause instanceof Error ? cause.message : 'Impossible de charger les épisodes.');
+    } finally {
+      setDetailLoading(false);
+    }
+  }
+
   return (
     <main className="app-shell">
       <header className="topbar">
@@ -89,13 +106,22 @@ function App() {
         {!loading && !searching && !error && visibleShows.length === 0 && (
           <p className="notice">Aucune série ne correspond à votre recherche.</p>
         )}
-        <ShowGrid shows={visibleShows} />
+        <ShowGrid shows={visibleShows} onSelectShow={openShow} />
       </section>
 
       <footer className="footer">
         <span>Données fournies par <a href="https://www.tvmaze.com/" target="_blank" rel="noreferrer">TVmaze</a></span>
         <span>API TVmaze · Licence CC BY-SA</span>
       </footer>
+
+      {selectedShow && (
+        <ShowDetailsModal
+          show={selectedShow}
+          loading={detailLoading}
+          error={detailError}
+          onClose={() => setSelectedShow(null)}
+        />
+      )}
     </main>
   );
 }

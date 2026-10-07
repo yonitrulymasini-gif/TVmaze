@@ -6,8 +6,23 @@ export type TvmazeShow = {
   name: string;
   genres: string[];
   image: { medium: string; original: string } | null;
+  summary: string | null;
   premiered: string | null;
+  status: string;
   rating: { average: number | null };
+  network: { name: string } | null;
+  webChannel: { name: string } | null;
+  _embedded?: { episodes?: TvmazeEpisode[] };
+};
+
+export type TvmazeEpisode = {
+  id: number;
+  name: string;
+  season: number;
+  number: number | null;
+  airdate: string | null;
+  runtime: number | null;
+  summary: string | null;
 };
 
 type SearchResult = {
@@ -67,4 +82,8 @@ export async function searchShows(query: string) {
     `/search/shows?q=${encodeURIComponent(query.trim())}`,
   );
   return results.map(({ show }) => show);
+}
+
+export function getShow(id: number) {
+  return fetchTvmaze<TvmazeShow>(`/shows/${id}?embed=episodes`);
 }
