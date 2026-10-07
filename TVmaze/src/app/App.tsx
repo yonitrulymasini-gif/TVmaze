@@ -1,15 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { getShow, getShows, searchShows } from '../features/catalog/service';
 import type { TvmazeShow } from '../features/catalog/service';
 import { ShowDetailsModal } from '../features/catalog/components/ShowDetailsModal';
-import { ShowGrid } from '../features/catalog/components/ShowGrid';
 import { useMyList } from '../features/catalog/hooks/useMyList';
+import { CatalogPage } from '../pages/CatalogPage';
+import { HomePage } from '../pages/HomePage';
 import '../App.css';
 
+const MIN_SEARCH_LENGTH = 3;
+
 function App() {
+  const [currentView, setCurrentView] = useState<'home' | 'catalog'>('home');
   const [shows, setShows] = useState<TvmazeShow[]>([]);
   const [searchResults, setSearchResults] = useState<TvmazeShow[]>([]);
   const [query, setQuery] = useState('');
+  const [genre, setGenre] = useState('');
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
@@ -18,14 +23,12 @@ function App() {
   const [detailError, setDetailError] = useState('');
   const [pageIndex, setPageIndex] = useState(0);
   const { myList, isInMyList, toggleMyList } = useMyList();
-  const MIN_SEARCH_LENGTH = 3;
-  const SHOWS_PER_PAGE = 20;
+
   const isSearchMode = query.trim().length >= MIN_SEARCH_LENGTH;
   const visibleShows = isSearchMode ? searchResults : shows;
-  const pageCount = Math.ceil(visibleShows.length / SHOWS_PER_PAGE);
-  const pageShows = visibleShows.slice(
-    pageIndex * SHOWS_PER_PAGE,
-    (pageIndex + 1) * SHOWS_PER_PAGE,
+  const availableGenres = useMemo(
+    () => [...new Set(shows.flatMap((show) => show.genres))].sort((a, b) => a.localeCompare(b, 'fr')),
+    [shows],
   );
 
   useEffect(() => {
@@ -71,9 +74,14 @@ function App() {
     if (value.trim().length < MIN_SEARCH_LENGTH) setSearchResults([]);
   }
 
-  function changePage(page: number) {
-    setPageIndex(page);
-    document.getElementById('all-shows')?.scrollIntoView({ behavior: 'smooth' });
+  function changeGenre(value: string) {
+    setGenre(value);
+    setPageIndex(0);
+  }
+
+  function goTo(view: 'home' | 'catalog') {
+    setCurrentView(view);
+    window.scrollTo({ top: 0 });
   }
 
   async function openShow(show: TvmazeShow) {
@@ -92,89 +100,56 @@ function App() {
   return (
     <main className="app-shell">
       <header className="topbar">
-        <div className="brand">
+        <button className="brand" onClick={() => goTo('home')} aria-label="TVmaze, accueil">
           <span className="brand-mark">TV</span>
           <span>maze</span>
-        </div>
+        </button>
+        <nav className="main-nav" aria-label="Navigation principale">
+          <button
+            className={currentView === 'home' ? 'main-nav-link active' : 'main-nav-link'}
+            onClick={() => goTo('home')}
+          >
+            Accueil
+          </button>
+          <button
+            className={currentView === 'catalog' ? 'main-nav-link active' : 'main-nav-link'}
+            onClick={() => goTo('catalog')}
+          >
+            Catalogue
+          </button>
+        </nav>
       </header>
 
-      <section className="home-hero">
-        <h1>Explorez l’univers des séries.</h1>
-        <p className="intro-copy">Découvrez des séries, retrouvez leurs épisodes et gardez vos préférées à portée de main.</p>
-        <label className="search-box">
-          <span aria-hidden="true">⌕</span>
-          <input
-            type="search"
-            value={query}
-            onChange={(event) => changeQuery(event.target.value)}
-            placeholder="Rechercher une série…"
-            aria-label="Rechercher une série"
-          />
-          {searching && <span className="search-status">Recherche…</span>}
-        </label>
-      </section>
-
-      <section className="catalog">
-        <h2>Ma liste ({myList.length})</h2>
-        {myList.length === 0 ? (
-          <p className="notice">Votre liste est vide. Cliquez sur ♡ sur une série pour l’ajouter.</p>
-        ) : (
-          <ShowGrid
-            shows={myList}
-            isInMyList={isInMyList}
-            onSelectShow={openShow}
-            onToggleMyList={toggleMyList}
-          />
-        )}
-      </section>
-
-      <section className="catalog" id="all-shows">
-        <h2>{isSearchMode ? 'Résultats de recherche' : 'Toutes les séries'} ({visibleShows.length})</h2>
-        {loading && <p className="notice">Chargement du catalogue…</p>}
-        {error && <p className="notice error-notice" role="alert">{error}</p>}
-        {!loading && !searching && !error && visibleShows.length === 0 && (
-          <p className="notice">Aucune série ne correspond à votre recherche.</p>
-        )}
-        <ShowGrid
-          shows={pageShows}
+      {currentView === 'home' ? (
+        <HomePage
+          featuredShows={shows.slice(0, 10)}
+          myList={myList}
+          loading={loading}
+          error={error}
           isInMyList={isInMyList}
+          onOpenCatalog={() => goTo('catalog')}
           onSelectShow={openShow}
           onToggleMyList={toggleMyList}
         />
-
-        {pageCount > 1 && (
-          <nav className="pagination" aria-label="Pagination">
-            <button
-              className="page-button"
-              onClick={() => changePage(pageIndex - 1)}
-              disabled={pageIndex === 0}
-            >
-              ← Précédent
-            </button>
-
-            <div className="page-numbers">
-              {Array.from({ length: pageCount }, (_, index) => (
-                <button
-                  key={index}
-                  className={index === pageIndex ? 'page-number active' : 'page-number'}
-                  onClick={() => changePage(index)}
-                  aria-current={index === pageIndex ? 'page' : undefined}
-                >
-                  {index + 1}
-                </button>
-              ))}
-            </div>
-
-            <button
-              className="page-button"
-              onClick={() => changePage(pageIndex + 1)}
-              disabled={pageIndex >= pageCount - 1}
-            >
-              Suivant →
-            </button>
-          </nav>
-        )}
-      </section>
+      ) : (
+        <CatalogPage
+          shows={visibleShows}
+          isSearchMode={isSearchMode}
+          query={query}
+          searching={searching}
+          genre={genre}
+          availableGenres={availableGenres}
+          pageIndex={pageIndex}
+          loading={loading}
+          error={error}
+          isInMyList={isInMyList}
+          onQueryChange={changeQuery}
+          onGenreChange={changeGenre}
+          onPageChange={setPageIndex}
+          onSelectShow={openShow}
+          onToggleMyList={toggleMyList}
+        />
+      )}
 
       <footer className="footer">
         <span>Données fournies par <a href="https://www.tvmaze.com/" target="_blank" rel="noreferrer">TVmaze</a></span>
