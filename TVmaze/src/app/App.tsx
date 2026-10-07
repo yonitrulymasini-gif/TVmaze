@@ -16,10 +16,17 @@ function App() {
   const [selectedShow, setSelectedShow] = useState<TvmazeShow | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
+  const [pageIndex, setPageIndex] = useState(0);
   const { myList, isInMyList, toggleMyList } = useMyList();
   const MIN_SEARCH_LENGTH = 3;
+  const SHOWS_PER_PAGE = 20;
   const isSearchMode = query.trim().length >= MIN_SEARCH_LENGTH;
   const visibleShows = isSearchMode ? searchResults : shows;
+  const pageCount = Math.ceil(visibleShows.length / SHOWS_PER_PAGE);
+  const pageShows = visibleShows.slice(
+    pageIndex * SHOWS_PER_PAGE,
+    (pageIndex + 1) * SHOWS_PER_PAGE,
+  );
 
   useEffect(() => {
     getShows()
@@ -58,9 +65,15 @@ function App() {
 
   function changeQuery(value: string) {
     setQuery(value);
+    setPageIndex(0);
     setSearching(value.trim().length >= MIN_SEARCH_LENGTH);
     setError('');
     if (value.trim().length < MIN_SEARCH_LENGTH) setSearchResults([]);
+  }
+
+  function changePage(page: number) {
+    setPageIndex(page);
+    document.getElementById('all-shows')?.scrollIntoView({ behavior: 'smooth' });
   }
 
   async function openShow(show: TvmazeShow) {
@@ -115,7 +128,7 @@ function App() {
         )}
       </section>
 
-      <section className="catalog">
+      <section className="catalog" id="all-shows">
         <h2>{isSearchMode ? 'Résultats de recherche' : 'Toutes les séries'} ({visibleShows.length})</h2>
         {loading && <p className="notice">Chargement du catalogue…</p>}
         {error && <p className="notice error-notice" role="alert">{error}</p>}
@@ -123,11 +136,44 @@ function App() {
           <p className="notice">Aucune série ne correspond à votre recherche.</p>
         )}
         <ShowGrid
-          shows={visibleShows}
+          shows={pageShows}
           isInMyList={isInMyList}
           onSelectShow={openShow}
           onToggleMyList={toggleMyList}
         />
+
+        {pageCount > 1 && (
+          <nav className="pagination" aria-label="Pagination">
+            <button
+              className="page-button"
+              onClick={() => changePage(pageIndex - 1)}
+              disabled={pageIndex === 0}
+            >
+              ← Précédent
+            </button>
+
+            <div className="page-numbers">
+              {Array.from({ length: pageCount }, (_, index) => (
+                <button
+                  key={index}
+                  className={index === pageIndex ? 'page-number active' : 'page-number'}
+                  onClick={() => changePage(index)}
+                  aria-current={index === pageIndex ? 'page' : undefined}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="page-button"
+              onClick={() => changePage(pageIndex + 1)}
+              disabled={pageIndex >= pageCount - 1}
+            >
+              Suivant →
+            </button>
+          </nav>
+        )}
       </section>
 
       <footer className="footer">
