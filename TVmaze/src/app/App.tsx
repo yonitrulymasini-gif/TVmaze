@@ -30,6 +30,13 @@ function App() {
     () => [...new Set(shows.flatMap((show) => show.genres))].sort((a, b) => a.localeCompare(b, 'fr')),
     [shows],
   );
+  const topRatedShows = useMemo(
+    () => shows
+      .filter((show) => show.rating.average !== null)
+      .sort((a, b) => (b.rating.average ?? 0) - (a.rating.average ?? 0))
+      .slice(0, 3),
+    [shows],
+  );
 
   useEffect(() => {
     getShows()
@@ -123,6 +130,7 @@ function App() {
       {currentView === 'home' ? (
         <HomePage
           featuredShows={shows.slice(0, 10)}
+          topRatedShows={topRatedShows}
           myList={myList}
           loading={loading}
           error={error}

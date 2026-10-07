@@ -1,8 +1,10 @@
 import type { TvmazeShow } from '../features/catalog/service';
+import { ShowCard } from '../features/catalog/components/ShowCard';
 import { ShowGrid } from '../features/catalog/components/ShowGrid';
 
 type HomePageProps = {
   featuredShows: TvmazeShow[];
+  topRatedShows: TvmazeShow[];
   myList: TvmazeShow[];
   loading: boolean;
   error: string;
@@ -14,6 +16,7 @@ type HomePageProps = {
 
 export function HomePage({
   featuredShows,
+  topRatedShows,
   myList,
   loading,
   error,
@@ -45,6 +48,28 @@ export function HomePage({
           />
         )}
       </section>
+
+      {topRatedShows.length > 0 && (
+        <section className="catalog">
+          <h2>Le Top 3</h2>
+          <div className="top-rated-grid">
+            {topRatedShows.map((show, index) => (
+              <div className="top-rated-item" key={show.id}>
+                <div className="top-rated-heading">
+                  <span className="rank-badge">#{index + 1}</span>
+                  <span className="top-rated-score">★ {show.rating.average?.toFixed(1)} / 10</span>
+                </div>
+                <ShowCard
+                  show={show}
+                  isInMyList={isInMyList(show)}
+                  onSelect={onSelectShow}
+                  onToggleMyList={onToggleMyList}
+                />
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="catalog">
         <div className="section-heading">
