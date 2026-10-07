@@ -3,6 +3,7 @@ import { getShow, getShows, searchShows } from '../features/catalog/service';
 import type { TvmazeShow } from '../features/catalog/service';
 import { ShowDetailsModal } from '../features/catalog/components/ShowDetailsModal';
 import { ShowGrid } from '../features/catalog/components/ShowGrid';
+import { useMyList } from '../features/catalog/hooks/useMyList';
 import '../App.css';
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   const [selectedShow, setSelectedShow] = useState<TvmazeShow | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
+  const { myList, isInMyList, toggleMyList } = useMyList();
   const MIN_SEARCH_LENGTH = 3;
   const isSearchMode = query.trim().length >= MIN_SEARCH_LENGTH;
   const visibleShows = isSearchMode ? searchResults : shows;
@@ -100,13 +102,32 @@ function App() {
       </section>
 
       <section className="catalog">
+        <h2>Ma liste ({myList.length})</h2>
+        {myList.length === 0 ? (
+          <p className="notice">Votre liste est vide. Cliquez sur ♡ sur une série pour l’ajouter.</p>
+        ) : (
+          <ShowGrid
+            shows={myList}
+            isInMyList={isInMyList}
+            onSelectShow={openShow}
+            onToggleMyList={toggleMyList}
+          />
+        )}
+      </section>
+
+      <section className="catalog">
         <h2>{isSearchMode ? 'Résultats de recherche' : 'Toutes les séries'} ({visibleShows.length})</h2>
         {loading && <p className="notice">Chargement du catalogue…</p>}
         {error && <p className="notice error-notice" role="alert">{error}</p>}
         {!loading && !searching && !error && visibleShows.length === 0 && (
           <p className="notice">Aucune série ne correspond à votre recherche.</p>
         )}
-        <ShowGrid shows={visibleShows} onSelectShow={openShow} />
+        <ShowGrid
+          shows={visibleShows}
+          isInMyList={isInMyList}
+          onSelectShow={openShow}
+          onToggleMyList={toggleMyList}
+        />
       </section>
 
       <footer className="footer">
@@ -119,6 +140,8 @@ function App() {
           show={selectedShow}
           loading={detailLoading}
           error={detailError}
+          isInMyList={isInMyList(selectedShow)}
+          onToggleMyList={toggleMyList}
           onClose={() => setSelectedShow(null)}
         />
       )}

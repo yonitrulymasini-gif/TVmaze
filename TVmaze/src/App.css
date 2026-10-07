@@ -38,7 +38,7 @@
 }
 
 .home-hero {
-  padding: 82px 20px 72px;
+  padding: 82px 20px 32px;;
   text-align: center;
 }
 
@@ -102,7 +102,7 @@
 }
 
 .catalog h2 {
-  margin: 0 0 16px;
+  margin: 0 0 24px;
   color: var(--ink);
   font-size: 26px;
   font-weight: 700;
@@ -116,7 +116,35 @@
 }
 
 .show-card {
+  position: relative;
   min-width: 0;
+}
+
+.card-heart {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #e0245e;
+  background: #ffffffe6;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.card-heart:hover {
+  background: white;
+}
+
+.card-heart.selected {
+  color: white;
+  background: #e0245e;
 }
 
 .poster-button {
@@ -174,6 +202,7 @@
 
 .show-title {
   display: block;
+  min-width: 0;
   max-width: 100%;
   overflow: hidden;
   padding: 0;
@@ -318,6 +347,37 @@
   margin-bottom: 12px;
   color: var(--muted);
   font-size: 12px;
+}
+
+.my-list-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 9px 14px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  color: var(--ink);
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.my-list-button span {
+  color: #e0245e;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.my-list-button:hover {
+  border-color: #e0245e;
+}
+
+.my-list-button.selected {
+  border-color: #e0245e;
+  color: #e0245e;
+  background: #fff0f4;
 }
 
 .summary {

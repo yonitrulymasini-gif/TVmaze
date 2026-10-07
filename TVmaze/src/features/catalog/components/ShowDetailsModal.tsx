@@ -6,10 +6,12 @@ type ShowDetailsModalProps = {
   show: TvmazeShow;
   loading: boolean;
   error: string;
+  isInMyList: boolean;
+  onToggleMyList: (show: TvmazeShow) => void;
   onClose: () => void;
 };
 
-export function ShowDetailsModal({ show, loading, error, onClose }: ShowDetailsModalProps) {
+export function ShowDetailsModal({ show, loading, error, isInMyList, onToggleMyList, onClose }: ShowDetailsModalProps) {
   useEffect(() => {
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') onClose();
@@ -49,6 +51,14 @@ export function ShowDetailsModal({ show, loading, error, onClose }: ShowDetailsM
             <div className="genre-list">
               {show.genres.map((item) => <span className="genre-chip" key={item}>{item}</span>)}
             </div>
+            <button
+              className={isInMyList ? 'my-list-button selected' : 'my-list-button'}
+              onClick={() => onToggleMyList(show)}
+              aria-pressed={isInMyList}
+            >
+              <span aria-hidden="true">{isInMyList ? '♥' : '♡'}</span>
+              {isInMyList ? 'Dans ma liste' : 'Ajouter à ma liste'}
+            </button>
             {plainText(show.summary) && <p className="summary">{plainText(show.summary)}</p>}
           </div>
         </div>
