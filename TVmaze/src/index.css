@@ -1,6 +1,6 @@
 :root {
   --accent: #0ea5e9;
-  --accent-text: color-mix(in srgb, var(--accent) 65%, black);
+  --accent-text: var(--accent);
   --accent-hover: color-mix(in srgb, var(--accent) 80%, white);
   --accent-focus: color-mix(in srgb, var(--accent) 45%, white);
   --ink: #161923;
