@@ -19,6 +19,13 @@ export function ShowDetailsModal({ show, loading, error, onClose }: ShowDetailsM
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [onClose]);
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+    document.body.style.overflow = '';
+    };
+  }, []);
+
   return (
     <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <section
