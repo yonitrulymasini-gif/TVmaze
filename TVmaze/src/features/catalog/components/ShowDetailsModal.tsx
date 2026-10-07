@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import type { TvmazeShow } from '../service';
 import { plainText } from '../utils';
+import { HeartIcon } from './HeartIcon';
 
 type ShowDetailsModalProps = {
   show: TvmazeShow;
@@ -56,7 +57,7 @@ export function ShowDetailsModal({ show, loading, error, isInMyList, onToggleMyL
               onClick={() => onToggleMyList(show)}
               aria-pressed={isInMyList}
             >
-              <span aria-hidden="true">{isInMyList ? '♥' : '♡'}</span>
+              <HeartIcon filled={isInMyList} />
               {isInMyList ? 'Dans ma liste' : 'Ajouter à ma liste'}
             </button>
           </div>

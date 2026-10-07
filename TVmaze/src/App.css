@@ -289,8 +289,11 @@
   color: #e0245e;
   background: #ffffffe6;
   cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
+}
+
+.card-heart .heart-icon {
+  width: 18px;
+  height: 18px;
 }
 
 .card-heart:hover {
@@ -519,10 +522,10 @@
   font-weight: 600;
 }
 
-.my-list-button span {
+.my-list-button .heart-icon {
+  width: 17px;
+  height: 17px;
   color: #e0245e;
-  font-size: 17px;
-  line-height: 1;
 }
 
 .my-list-button:hover {
@@ -681,12 +684,6 @@
 
   .top-rated-grid {
     gap: 12px;
-  }
-
-  .top-rated-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 5px;
   }
 
   .top-rated-score {

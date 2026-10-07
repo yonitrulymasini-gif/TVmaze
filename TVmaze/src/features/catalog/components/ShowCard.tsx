@@ -1,4 +1,5 @@
 import type { TvmazeShow } from '../service';
+import { HeartIcon } from './HeartIcon';
 
 type ShowCardProps = {
   show: TvmazeShow;
@@ -22,7 +23,7 @@ export function ShowCard({ show, isInMyList, onSelect, onToggleMyList }: ShowCar
         aria-label={isInMyList ? `Retirer ${show.name} de ma liste` : `Ajouter ${show.name} à ma liste`}
         aria-pressed={isInMyList}
       >
-        {isInMyList ? '♥' : '♡'}
+        <HeartIcon filled={isInMyList} />
       </button>
       <div className="card-info">
         <button className="show-title" onClick={() => onSelect(show)}>{show.name}</button>
