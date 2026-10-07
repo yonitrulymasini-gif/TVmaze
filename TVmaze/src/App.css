@@ -107,7 +107,7 @@
   padding: 14px 22px;
   border: 0;
   border-radius: 10px;
-  color: var(--ink);
+  color: white;
   background: var(--accent);
   cursor: pointer;
   font-size: 15px;
@@ -155,7 +155,7 @@
   place-items: center;
   padding: 0 8px;
   border-radius: 8px;
-  color: var(--ink);
+  color: white;
   background: var(--accent);
   font-size: 12px;
   font-weight: 750;
@@ -622,7 +622,7 @@
 
 .page-number.active {
   border-color: var(--accent);
-  color: var(--ink);
+  color: white;
   background: var(--accent);
 }
 
