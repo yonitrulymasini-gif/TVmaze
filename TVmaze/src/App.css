@@ -1,8 +1,4 @@
 .app-shell {
-  --ink: #161923;
-  --muted: #777c8b;
-  --accent: #6654db;
-  --line: #e9e9f0;
   width: min(1180px, 100%);
   margin: 0 auto;
   padding: 0 36px;
@@ -37,7 +33,7 @@
 }
 
 .main-nav-link.active {
-  color: var(--accent);
+  color: var(--accent-text);
   font-weight: 650;
 }
 
@@ -55,27 +51,28 @@
   display: inline-flex;
   justify-self: start;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   padding: 0;
   border: 0;
+  color: var(--accent);
   background: transparent;
   cursor: pointer;
-  color: var(--ink);
-  font-size: 22px;
-  font-weight: 750;
-  letter-spacing: -1px;
 }
 
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 32px;
+.brand-icon {
+  width: 38px;
   height: 32px;
-  border-radius: 10px;
-  color: white;
-  background: var(--accent);
-  font-size: 12px;
+}
+
+.brand-name {
+  color: var(--ink);
+  font-size: 24px;
+  font-weight: 800;
   letter-spacing: -0.5px;
+}
+
+.brand-name span {
+  color: var(--accent-text);
 }
 
 .home-hero {
@@ -110,7 +107,7 @@
   padding: 14px 22px;
   border: 0;
   border-radius: 10px;
-  color: white;
+  color: var(--ink);
   background: var(--accent);
   cursor: pointer;
   font-size: 15px;
@@ -118,13 +115,13 @@
 }
 
 .primary-action:hover {
-  background: #5543cb;
+  background: var(--accent-hover);
 }
 
 .text-action {
   padding: 8px 0;
   border: 0;
-  color: var(--accent);
+  color: var(--accent-text);
   background: transparent;
   cursor: pointer;
   font-size: 13px;
@@ -158,14 +155,14 @@
   place-items: center;
   padding: 0 8px;
   border-radius: 8px;
-  color: white;
+  color: var(--ink);
   background: var(--accent);
   font-size: 12px;
   font-weight: 750;
 }
 
 .top-rated-score {
-  color: #b77c09;
+  color: #8a5c00;
   font-size: 12px;
   font-weight: 700;
 }
@@ -376,7 +373,7 @@
 }
 
 .show-title:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .card-meta {
@@ -390,15 +387,15 @@
 .genre-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
 }
 
 .genre-chip {
-  padding: 3px 7px;
-  border-radius: 5px;
-  color: #625a9a;
-  background: #f0eefb;
-  font-size: 9px;
+  color: #5f6370;
+  font-size: 11px;
+}
+
+.genre-chip + .genre-chip::before {
+  content: ", ";
 }
 
 .notice {
@@ -425,13 +422,13 @@
 }
 
 .footer a {
-  color: var(--accent);
-  text-decoration: none;
+  color: var(--accent-text);
+  text-decoration: underline;
 }
 
 .eyebrow {
   margin: 0 0 12px;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 10px;
   font-weight: 750;
   letter-spacing: 1.6px;
@@ -573,7 +570,7 @@
 
 .episode-number {
   padding-top: 2px;
-  color: var(--accent);
+  color: var(--accent-text);
   font-size: 10px;
   font-weight: 700;
 }
@@ -625,7 +622,7 @@
 
 .page-number.active {
   border-color: var(--accent);
-  color: white;
+  color: var(--ink);
   background: var(--accent);
 }
 

@@ -108,8 +108,12 @@ function App() {
     <main className="app-shell">
       <header className="topbar">
         <button className="brand" onClick={() => goTo('home')} aria-label="TVmaze, accueil">
-          <span className="brand-mark">TV</span>
-          <span>maze</span>
+          <svg className="brand-icon" viewBox="0 0 48 40" aria-hidden="true">
+            <path d="M15 3l9 9 9-9" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <rect x="4" y="13" width="40" height="25" rx="7" fill="none" stroke="currentColor" strokeWidth="4" />
+            <path d="M20 20.5v10l8.5-5z" fill="var(--ink)" />
+          </svg>
+          <span className="brand-name">TV<span>Maze</span></span>
         </button>
         <nav className="main-nav" aria-label="Navigation principale">
           <button

@@ -1,4 +1,11 @@
 :root {
+  --accent: #0ea5e9;
+  --accent-text: color-mix(in srgb, var(--accent) 65%, black);
+  --accent-hover: color-mix(in srgb, var(--accent) 80%, white);
+  --accent-focus: color-mix(in srgb, var(--accent) 45%, white);
+  --ink: #161923;
+  --muted: #35363b;
+  --line: #e9e9f0;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #222532;
   background: #fff;
@@ -31,6 +38,6 @@ button:focus-visible,
 a:focus-visible,
 select:focus-visible,
 input:focus-visible {
-  outline: 3px solid #bdb5ff;
+  outline: 3px solid var(--accent-focus);
   outline-offset: 3px;
 }

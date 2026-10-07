@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { TvmazeShow } from '../features/catalog/service';
 import { ShowCard } from '../features/catalog/components/ShowCard';
 import { ShowGrid } from '../features/catalog/components/ShowGrid';
@@ -14,6 +15,8 @@ type HomePageProps = {
   onToggleMyList: (show: TvmazeShow) => void;
 };
 
+const MY_LIST_PREVIEW = 5;
+
 export function HomePage({
   featuredShows,
   topRatedShows,
@@ -25,6 +28,9 @@ export function HomePage({
   onSelectShow,
   onToggleMyList,
 }: HomePageProps) {
+  const [showAllMyList, setShowAllMyList] = useState(false);
+  const visibleMyList = showAllMyList ? myList : myList.slice(0, MY_LIST_PREVIEW);
+
   return (
     <>
       <section className="home-hero">
@@ -36,12 +42,19 @@ export function HomePage({
       </section>
 
       <section className="catalog">
-        <h2>Ma liste ({myList.length})</h2>
+        <div className="section-heading">
+          <h2>Ma liste ({myList.length})</h2>
+          {myList.length > MY_LIST_PREVIEW && (
+            <button className="text-action" onClick={() => setShowAllMyList(!showAllMyList)}>
+              {showAllMyList ? 'Réduire ↑' : 'Tout afficher ↓'}
+            </button>
+          )}
+        </div>
         {myList.length === 0 ? (
           <p className="notice">Votre liste est vide. Cliquez sur ♡ sur une série pour l’ajouter.</p>
         ) : (
           <ShowGrid
-            shows={myList}
+            shows={visibleMyList}
             isInMyList={isInMyList}
             onSelectShow={onSelectShow}
             onToggleMyList={onToggleMyList}
