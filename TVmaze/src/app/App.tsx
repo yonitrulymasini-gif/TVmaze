@@ -15,8 +15,8 @@ function App() {
   const [selectedShow, setSelectedShow] = useState<TvmazeShow | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
   const [detailError, setDetailError] = useState('');
-
-  const isSearchMode = query.trim().length >= 2;
+  const MIN_SEARCH_LENGTH = 3;
+  const isSearchMode = query.trim().length >= 3;
   const visibleShows = isSearchMode ? searchResults : shows;
 
   useEffect(() => {
@@ -30,7 +30,7 @@ function App() {
 
   useEffect(() => {
     const searchTerm = query.trim();
-    if (searchTerm.length < 2) return;
+    if (searchTerm.length < 3) return;
 
     let isCurrentSearch = true;
     const timeout = window.setTimeout(() => {
@@ -56,9 +56,9 @@ function App() {
 
   function changeQuery(value: string) {
     setQuery(value);
-    setSearching(value.trim().length >= 2);
+    setSearching(value.trim().length >= 3);
     setError('');
-    if (value.trim().length < 2) setSearchResults([]);
+    if (value.trim().length < 3) setSearchResults([]);
   }
 
   async function openShow(show: TvmazeShow) {
